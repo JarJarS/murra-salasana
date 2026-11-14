@@ -147,13 +147,41 @@ button:hover {
 
 .leaderboard ol {
     margin: 0;
-    padding-left: 25px;
-    font-size: 1.1rem;
+    padding-left: 0;
+    list-style: none;
+    font-size: 1.15rem;
 }
 
 .leaderboard li {
-    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
     border-bottom: 1px solid #1e293b;
+}
+
+.leaderboard-rank {
+    flex: 0 0 2.5rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.leaderboard-rank-1 {
+    color: #facc15;
+    font-size: 1.35em;
+    font-weight: bold;
+}
+
+.leaderboard-rank-2 {
+    color: #cbd5e1;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.leaderboard-rank-3 {
+    color: #cd7f32;
+    font-size: 1.25em;
+    font-weight: bold;
 }
 
 .score-form {

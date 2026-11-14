@@ -349,7 +349,7 @@ function saveScore(name, finalScore) {
 function renderLeaderboard(containerId) {
     const container = document.getElementById(containerId);
     const scores = getLeaderboard();
-    container.innerHTML = "<h3>Top 5</h3>";
+    container.innerHTML = "<h3>Top 10</h3>";
 
     if (!scores) {
         const errorMessage = document.createElement("p");
@@ -366,9 +366,21 @@ function renderLeaderboard(containerId) {
     }
 
     const list = document.createElement("ol");
-    scores.slice(0, 5).forEach(entry => {
+    list.className = "leaderboard-list";
+    scores.slice(0, 10).forEach((entry, index) => {
         const item = document.createElement("li");
-        item.textContent = `${entry.name} — ${entry.score} tiliä`;
+        const rank = document.createElement("span");
+        const medal = ["🥇", "🥈", "🥉"][index];
+        rank.className = "leaderboard-rank";
+        rank.textContent = medal || `${index + 1}.`;
+        if (index < 3) {
+            item.classList.add(`leaderboard-rank-${index + 1}`);
+            rank.setAttribute("aria-label", `${index + 1}. sija`);
+        }
+
+        const result = document.createElement("span");
+        result.textContent = `${entry.name} — ${entry.score} tiliä`;
+        item.append(rank, result);
         list.appendChild(item);
     });
     container.appendChild(list);
