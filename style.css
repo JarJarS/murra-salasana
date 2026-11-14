@@ -180,3 +180,67 @@ button:hover {
 .score-message {
     color: #22c55e;
 }
+
+@media (min-width: 900px) and (min-height: 700px) {
+    .game-box {
+        width: min(90vw, 1100px);
+        max-width: 1100px;
+        padding: clamp(36px, 4vw, 56px);
+    }
+
+    .game-box h1 {
+        font-size: clamp(2.2rem, 3vw, 3rem);
+    }
+
+    .game-box > p {
+        font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+    }
+
+    .hero-img {
+        width: clamp(130px, 12vw, 170px);
+        height: clamp(130px, 12vw, 170px);
+    }
+
+    .stats {
+        font-size: clamp(1.35rem, 1.8vw, 1.7rem);
+    }
+
+    .profile-container {
+        gap: 24px;
+        padding: 28px;
+    }
+
+    .profile-avatar {
+        width: clamp(100px, 9vw, 130px);
+        height: clamp(100px, 9vw, 130px);
+    }
+
+    .profile-bio {
+        font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+    }
+
+    .password-display {
+        font-size: clamp(1.8rem, 2.4vw, 2.3rem);
+        padding: 18px;
+    }
+
+    .word-grid {
+        gap: 14px;
+    }
+
+    .word-grid button,
+    .btn-action {
+        padding: 18px;
+        font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+    }
+
+    .btn-start {
+        font-size: clamp(1.35rem, 1.7vw, 1.65rem);
+        padding: 18px 34px;
+    }
+
+    .leaderboard {
+        font-size: 1.2rem;
+        padding: 20px;
+    }
+}
