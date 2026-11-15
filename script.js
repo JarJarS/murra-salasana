@@ -267,8 +267,10 @@ let currentTarget = null;
 let currentAttempt = "";
 let timerInterval = null;
 let usedIndices = [];
-let lastProfileIndex = -1;
 const leaderboardStorageKey = "murraSalasanaLeaderboard";
+const profileHistoryStorageKey = "murraSalasanaSeenProfiles";
+let profileHistoryStorageAvailable = true;
+let seenProfilePasswords = loadSeenProfilePasswords();
 const musicTracks = [
     { src: "audio/Locked_Behind_Glass.mp3", startTime: 33 },
     { src: "audio/Midnight_Overwrite.mp3", startTime: 25 },
@@ -576,21 +578,31 @@ function nextProfile() {
     display.style.color = "#22c55e";
     display.innerText = "_";
 
-    // Varmistetaan ettei sama profiili tule heti uudelleen
     if (usedIndices.length >= profiles.length) {
         usedIndices = [];
     }
-    let availableIndices = profiles
+    const availableIndices = profiles
         .map((_, index) => index)
         .filter(index => !usedIndices.includes(index));
-    if (usedIndices.length === 0 && availableIndices.length > 1) {
-        availableIndices = availableIndices.filter(index => index !== lastProfileIndex);
+    let unseenIndices = availableIndices.filter(index =>
+        !seenProfilePasswords.includes(profiles[index].password)
+    );
+    if (unseenIndices.length === 0) {
+        const previousProfilePassword = seenProfilePasswords[seenProfilePasswords.length - 1];
+        seenProfilePasswords = [];
+        unseenIndices = availableIndices.filter(index =>
+            profiles[index].password !== previousProfilePassword
+        );
+    }
+    if (unseenIndices.length === 0) {
+        throw new Error("Uutta profiilihaastetta ei löytynyt valittavaksi.");
     }
 
-    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+    const randomIndex = unseenIndices[Math.floor(Math.random() * unseenIndices.length)];
     usedIndices.push(randomIndex);
-    lastProfileIndex = randomIndex;
     currentTarget = profiles[randomIndex];
+    seenProfilePasswords.push(currentTarget.password);
+    saveSeenProfilePasswords();
 
     // Vaihdetaan profiilikuva ja teksti
     const imgEl = document.getElementById("profileImg");
@@ -609,6 +621,52 @@ function nextProfile() {
         btn.addEventListener("click", () => selectWord(word));
         grid.appendChild(btn);
     });
+}
+
+function loadSeenProfilePasswords() {
+    let serializedHistory;
+    try {
+        serializedHistory = localStorage.getItem(profileHistoryStorageKey);
+    } catch (error) {
+        profileHistoryStorageAvailable = false;
+        console.error("Haastehistorian lukeminen epäonnistui.", error);
+        return [];
+    }
+
+    if (!serializedHistory) {
+        return [];
+    }
+
+    let savedPasswords;
+    try {
+        savedPasswords = JSON.parse(serializedHistory);
+    } catch (error) {
+        console.error("Haastehistorian tulkitseminen epäonnistui.", error);
+        return [];
+    }
+
+    if (!Array.isArray(savedPasswords)) {
+        console.error("Tallennettu haastehistoria ei ole kelvollinen lista.");
+        return [];
+    }
+
+    const validPasswords = new Set(profiles.map(profile => profile.password));
+    return [...new Set(savedPasswords.filter(password =>
+        typeof password === "string" && validPasswords.has(password)
+    ))];
+}
+
+function saveSeenProfilePasswords() {
+    if (!profileHistoryStorageAvailable) {
+        return;
+    }
+
+    try {
+        localStorage.setItem(profileHistoryStorageKey, JSON.stringify(seenProfilePasswords));
+    } catch (error) {
+        profileHistoryStorageAvailable = false;
+        console.error("Haastehistorian tallentaminen epäonnistui.", error);
+    }
 }
 
 function shuffleItems(items) {
