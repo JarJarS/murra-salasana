@@ -1,6 +1,7 @@
 # Murra salasana
 
 Murra salasana on selainpohjainen tietoturvapeli. Pelissä on 60 sekuntia aikaa ja 50 kuvitteellista profiilihaastetta.
+Sama profiili näytetään uudelleen vasta, kun kaikki 50 haastetta on käyty läpi. Haastehistoria tallennetaan selaimeen, joten kierto jatkuu myös pelisessioiden välillä.
 
 ## Käynnistä peli
 
