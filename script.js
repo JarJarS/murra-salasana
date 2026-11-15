@@ -233,6 +233,31 @@ const profiles = [
         bio: "<b>@OonaKukat</b><br>Kesällä kasvatan auringonkukkia ja ihailen niiden korkeutta.",
         password: "AuringonkukkaKesä",
         words: ["Auringonkukka", "Kesä", "Oona", "Kukka", "Puutarha", "Aurinko", "Kasvi", "15", "Vesi"]
+    },
+    {
+        bio: "<b>@SallaRetkeilee</b><br>Retkeilen Nuuksiossa ja teen retkiruokaa trangialla.",
+        password: "NuuksioTrangia",
+        words: ["Nuuksio", "Trangia", "Salla", "Retki", "Teltta", "Metsä", "Polku", "Kesä", "Kartta"]
+    },
+    {
+        bio: "<b>@OttoKuvaa</b><br>Kuvaan luontoa kamerallani. Suosikkipaikkani on Saimaa.",
+        password: "SaimaaKamera",
+        words: ["Saimaa", "Kamera", "Otto", "Valokuva", "Luonto", "Järvi", "Maisema", "Kesä", "Kuva"]
+    },
+    {
+        bio: "<b>@AinoKasvattaa</b><br>Kasvatan parvekkeella tomaatteja ja tuoksuvaa basilikaa.",
+        password: "TomaattiBasilika",
+        words: ["Tomaatti", "Basilika", "Aino", "Parveke", "Kasvi", "Puutarha", "Multa", "Kesä", "Ruukku"]
+    },
+    {
+        bio: "<b>@EemeliPelaa</b><br>Meillä on perjantaisin lautapeli-ilta. Pelataan usein Catania.",
+        password: "CatanPerjantai",
+        words: ["Catan", "Perjantai", "Eemeli", "Lautapeli", "Peli-ilta", "Noppa", "Ystävät", "Strategia", "Peli"]
+    },
+    {
+        bio: "<b>@NooraLuistelee</b><br>Talvella luistelen järven jäällä ja käyn usein Rovaniemen kentällä.",
+        password: "LuisteluRovaniemi",
+        words: ["Luistelu", "Rovaniemi", "Noora", "Jää", "Talvi", "Luistin", "Kenttä", "Kiekko", "Urheilu"]
     }
 ];
 
@@ -242,6 +267,7 @@ let currentTarget = null;
 let currentAttempt = "";
 let timerInterval = null;
 let usedIndices = [];
+let lastProfileIndex = -1;
 const leaderboardStorageKey = "murraSalasanaLeaderboard";
 const musicTracks = [
     { src: "audio/Locked_Behind_Glass.mp3", startTime: 33 },
@@ -554,12 +580,16 @@ function nextProfile() {
     if (usedIndices.length >= profiles.length) {
         usedIndices = [];
     }
-    let randomIndex;
-    do {
-        randomIndex = Math.floor(Math.random() * profiles.length);
-    } while (usedIndices.includes(randomIndex));
+    let availableIndices = profiles
+        .map((_, index) => index)
+        .filter(index => !usedIndices.includes(index));
+    if (usedIndices.length === 0 && availableIndices.length > 1) {
+        availableIndices = availableIndices.filter(index => index !== lastProfileIndex);
+    }
 
+    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
     usedIndices.push(randomIndex);
+    lastProfileIndex = randomIndex;
     currentTarget = profiles[randomIndex];
 
     // Vaihdetaan profiilikuva ja teksti
@@ -568,8 +598,8 @@ function nextProfile() {
     imgEl.src = anonImages[Math.floor(Math.random() * anonImages.length)];
     document.getElementById("profileBio").innerHTML = currentTarget.bio;
 
-    // Sekoitetaan sanat
-    const shuffled = [...currentTarget.words].sort(() => Math.random() - 0.5);
+    // Sekoitetaan sanat tasaisesti
+    const shuffled = shuffleItems([...currentTarget.words]);
     const grid = document.getElementById("wordGrid");
     grid.innerHTML = "";
 
@@ -579,6 +609,14 @@ function nextProfile() {
         btn.addEventListener("click", () => selectWord(word));
         grid.appendChild(btn);
     });
+}
+
+function shuffleItems(items) {
+    for (let index = items.length - 1; index > 0; index--) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [items[index], items[randomIndex]] = [items[randomIndex], items[index]];
+    }
+    return items;
 }
 
 function selectWord(word) {
