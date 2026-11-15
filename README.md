@@ -17,7 +17,9 @@ Peli toimii staattisena verkkosivuna eikä vaadi erillistä asennusta tai palvel
 - Väärän valinnan jälkeen voit yrittää uudelleen tai tyhjentää valinnan.
 - Kun aika loppuu, voit tallentaa pisteesi nimimerkillä.
 
-Top 5 -lista näkyy aloitusruudussa ja pelin päätyttyä. Tulokset tallennetaan selaimen paikalliseen tallennustilaan, joten lista on selain- ja osoitekohtainen.
+Top 10 -lista näkyy aloitusruudussa ja pelin päätyttyä. Tulokset tallennetaan selaimen paikalliseen tallennustilaan, joten lista on selain- ja osoitekohtainen.
+
+Taustamusiikkia arvotaan kuudesta kappaleesta, eikä sama kappale soi kahdessa peräkkäisessä pelissä. Musiikki alkaa pelin käynnistyessä 20 prosentin äänenvoimakkuudella ja pysähtyy pelin päättyessä. Oikean yläkulman painikkeesta voi mykistää musiikin, ja sen alla olevalla liukusäätimellä voi säätää äänenvoimakkuutta.
 
 ## Tiedostot
 
@@ -25,6 +27,7 @@ Top 5 -lista näkyy aloitusruudussa ja pelin päätyttyä. Tulokset tallennetaan
 - `style.css` – ulkoasu ja taustaliukuväri
 - `script.js` – pelin toiminta, profiilit ja tuloslista
 - `images/` – pelin kuvat
+- `audio/` – pelin taustamusiikki
 
 ## Kuvien tekijät
 
@@ -43,5 +46,14 @@ Kuvien lähde- ja tekijätiedot ovat Pexels-kuvien tiedostonimien mukaiset:
 
 Tekoälyä käytettiin apuna pelin suunnittelussa ja toteutuksessa, kuten koodin kirjoittamisessa ja muokkaamisessa.
 
-- Alkuperäinen suunnittelu: Gemini 4 Hydrogen.
+- Alkuperäinen suunnittelu: Gemini (käyttäjän ilmoittama mallin nimike: Gemini 4 Hydrogen; tarkkaa versiota ei ole vahvistettu).
 - Viimeistely ja koodimuutokset: Copilot SDK in VS Code. Käytetyn tekoälymallin nimeä tai versiota ei ollut saatavilla.
+- Pelin kuusi taustamusiikkikappaletta generoitiin Google Gemini Prolla käyttäjän kuvausten perusteella:
+  - `Locked_Behind_Glass.mp3`
+  - `Midnight_Overwrite.mp3`
+  - `Midnight_Override2.mp3`
+  - `Nine_Seconds_Left.mp3`
+  - `One_More_Credit.mp3`
+  - `Seconds_Before_The_Lock.mp3`
+
+Tämä on musiikin alkuperätieto, ei väite siitä, että kappaleet olisivat public domain -aineistoa tai tekijänoikeudellisesti yksinoikeudella suojattuja. Googlen [palveluehdot](https://policies.google.com/terms?hl=fi) kertovat, ettei Google vaadi omistajuutta joissakin palveluissa luotuun alkuperäiseen sisältöön. Sisällön suoja ja käyttöoikeudet riippuvat kuitenkin sovellettavasta laista sekä käytetyn Gemini-palvelun ja ominaisuuden ehdoista.

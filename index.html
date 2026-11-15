@@ -16,6 +16,19 @@
         <div class="leaderboard" id="startLeaderboard"></div>
     </div>
 
+    <div class="music-control">
+        <button class="music-toggle" id="musicToggle" type="button" aria-label="Mykistä taustamusiikki" aria-pressed="true">
+            🔊 Musiikki päällä
+        </button>
+        <label class="volume-control" for="volumeSlider">
+            <span>Äänenvoimakkuus</span>
+            <output id="volumeValue" for="volumeSlider">20 %</output>
+            <input id="volumeSlider" type="range" min="0" max="100" value="20" aria-describedby="volumeValue">
+        </label>
+        <span class="music-status" id="musicStatus" role="status" aria-live="polite"></span>
+    </div>
+    <audio id="backgroundMusic" preload="auto"></audio>
+
     <script src="script.js"></script>
 </body>
 </html>

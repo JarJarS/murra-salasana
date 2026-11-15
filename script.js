@@ -243,8 +243,31 @@ let currentAttempt = "";
 let timerInterval = null;
 let usedIndices = [];
 const leaderboardStorageKey = "murraSalasanaLeaderboard";
+const musicTracks = [
+    { src: "audio/Locked_Behind_Glass.mp3", startTime: 33 },
+    { src: "audio/Midnight_Overwrite.mp3", startTime: 25 },
+    { src: "audio/Midnight_Override2.mp3", startTime: 38 },
+    { src: "audio/Nine_Seconds_Left.mp3", startTime: 23 },
+    { src: "audio/One_More_Credit.mp3", startTime: 48 },
+    { src: "audio/Seconds_Before_The_Lock.mp3", startTime: 48 }
+];
+let backgroundMusic = document.getElementById("backgroundMusic");
+let preloadedMusic = new Audio();
+const musicToggle = document.getElementById("musicToggle");
+const musicStatus = document.getElementById("musicStatus");
+const volumeSlider = document.getElementById("volumeSlider");
+const volumeValue = document.getElementById("volumeValue");
+let musicMuted = false;
+let activeMusicTrack = null;
+let nextMusicTrack = null;
+let lastMusicTrackIndex = -1;
+preloadedMusic.preload = "auto";
 
 document.getElementById("startBtn").addEventListener("click", startGame);
+updateMusicVolume();
+musicToggle.addEventListener("click", toggleMusic);
+volumeSlider.addEventListener("input", updateMusicVolume);
+prepareInitialMusicTrack();
 renderLeaderboard("startLeaderboard");
 
 function startGame() {
@@ -264,11 +287,18 @@ function startGame() {
             endGame();
         }
     }, 1000);
+    startBackgroundMusic();
 }
 
 function endGame() {
     clearInterval(timerInterval);
     timerInterval = null;
+    stopBackgroundMusic();
+    backgroundMusic = preloadedMusic;
+    preloadedMusic = document.getElementById("backgroundMusic");
+    activeMusicTrack = nextMusicTrack;
+    prepareNextMusicTrack();
+    let scoreSaved = false;
     document.getElementById("gameBox").innerHTML = `
         <h1>Peli päättyi!</h1>
         <p>Murretut tilit: ${score}</p>
@@ -284,6 +314,11 @@ function endGame() {
     renderLeaderboard("endLeaderboard");
     document.getElementById("scoreForm").addEventListener("submit", event => {
         event.preventDefault();
+        if (scoreSaved) {
+            document.getElementById("scoreMessage").textContent = "Tulos on jo tallennettu tälle pelikerralle.";
+            return;
+        }
+
         const name = document.getElementById("playerName").value.trim();
         const message = document.getElementById("scoreMessage");
 
@@ -293,6 +328,11 @@ function endGame() {
         }
 
         if (saveScore(name, score)) {
+            scoreSaved = true;
+            document.getElementById("playerName").disabled = true;
+            const saveButton = document.querySelector("#scoreForm button[type='submit']");
+            saveButton.disabled = true;
+            saveButton.textContent = "Tallennettu";
             message.textContent = "Tulos tallennettu.";
             renderLeaderboard("endLeaderboard");
         } else {
@@ -300,6 +340,106 @@ function endGame() {
         }
     });
     document.getElementById("startBtn").addEventListener("click", startGame);
+}
+
+function startBackgroundMusic() {
+    if (musicMuted) {
+        return;
+    }
+
+    const playTrack = () => {
+        if (musicMuted || !timerInterval) {
+            return;
+        }
+
+        const startTime = activeMusicTrack.startTime;
+        backgroundMusic.muted = true;
+        const needsSeek = Math.abs(backgroundMusic.currentTime - startTime) > 0.1;
+        const playbackPromise = backgroundMusic.play();
+        let seekPromise = Promise.resolve();
+        if (needsSeek) {
+            seekPromise = new Promise(resolve => {
+                backgroundMusic.addEventListener("seeked", resolve, { once: true });
+                backgroundMusic.currentTime = startTime;
+            });
+        }
+
+        Promise.all([playbackPromise, seekPromise])
+            .then(() => {
+                if (!timerInterval) {
+                    stopBackgroundMusic();
+                    return;
+                }
+                backgroundMusic.muted = musicMuted;
+                musicStatus.textContent = "";
+            })
+            .catch(error => {
+                backgroundMusic.muted = musicMuted;
+                console.error("Taustamusiikin toisto ei käynnistynyt.", error);
+                musicStatus.textContent = "Musiikki ei käynnistynyt. Tarkista selaimen ääniasetukset.";
+            });
+    };
+
+    if (backgroundMusic.readyState > 0) {
+        playTrack();
+    } else {
+        backgroundMusic.addEventListener("loadedmetadata", playTrack, { once: true });
+    }
+}
+
+function stopBackgroundMusic() {
+    backgroundMusic.pause();
+    if (backgroundMusic.readyState > 0) {
+        backgroundMusic.currentTime = activeMusicTrack.startTime;
+    }
+}
+
+function selectNextMusicTrack() {
+    const availableTracks = musicTracks
+        .map((track, index) => ({ track, index }))
+        .filter(({ index }) => index !== lastMusicTrackIndex);
+    const next = availableTracks[Math.floor(Math.random() * availableTracks.length)];
+
+    lastMusicTrackIndex = next.index;
+    return next.track;
+}
+
+function prepareInitialMusicTrack() {
+    activeMusicTrack = selectNextMusicTrack();
+    backgroundMusic.src = activeMusicTrack.src;
+    backgroundMusic.load();
+    prepareNextMusicTrack();
+}
+
+function prepareNextMusicTrack() {
+    nextMusicTrack = selectNextMusicTrack();
+    preloadedMusic.volume = backgroundMusic.volume;
+    preloadedMusic.muted = musicMuted;
+    preloadedMusic.src = nextMusicTrack.src;
+    preloadedMusic.load();
+}
+
+function toggleMusic() {
+    musicMuted = !musicMuted;
+    backgroundMusic.muted = musicMuted;
+    preloadedMusic.muted = musicMuted;
+    musicToggle.setAttribute("aria-pressed", String(!musicMuted));
+    musicToggle.setAttribute(
+        "aria-label",
+        musicMuted ? "Ota taustamusiikki käyttöön" : "Mykistä taustamusiikki"
+    );
+    musicToggle.textContent = musicMuted ? "🔇 Musiikki mykistetty" : "🔊 Musiikki päällä";
+
+    if (!musicMuted && timerInterval && backgroundMusic.paused) {
+        startBackgroundMusic();
+    }
+}
+
+function updateMusicVolume() {
+    const volumePercent = Number(volumeSlider.value);
+    backgroundMusic.volume = volumePercent / 100;
+    preloadedMusic.volume = backgroundMusic.volume;
+    volumeValue.value = `${volumePercent} %`;
 }
 
 function getLeaderboard() {
