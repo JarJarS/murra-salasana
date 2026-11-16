@@ -299,6 +299,7 @@ button:disabled {
 
     .stats {
         font-size: clamp(1.35rem, 1.8vw, 1.7rem);
+        padding-right: clamp(0px, calc(816px - 50vw), 220px);
     }
 
     .profile-container {
@@ -359,5 +360,11 @@ button:disabled {
     .music-toggle {
         padding: 8px 10px;
         font-size: 0.85rem;
+    }
+}
+
+@media (min-width: 900px) and (max-height: 699px) {
+    .stats {
+        padding-right: clamp(0px, calc(587px - 50vw), 137px);
     }
 }
