@@ -263,7 +263,7 @@ const profiles = [
         ["@AavaRevontuli", "Kävin Lapissa katsomassa revontulia ja kuvasin niitä koko illan.", "Lappi", "Revontuli", ["Aava", "Talvi", "Kamera", "Yö", "Pohjoinen", "Tähdet", "Retki"]],
         ["@EliasPurjehtii", "Purjehdin kesäisin Turun saaristossa vanhalla veneelläni.", "Turku", "Purjehdus", ["Elias", "Saaristo", "Vene", "Aallot", "Satama", "Kesä", "Kartta"]],
         ["@HelmiKeraamikko", "Teen savesta keramiikkaa ja lasitan itse tekemäni mukit.", "Savi", "Keramiikka", ["Helmi", "Muki", "Uuni", "Muotoilu", "Lasite", "Taide", "Saviastia"]],
-        ["@OskariKiipeilee", "Käyn kiipeilyhallilla ja harjoittelen vaikeampia reittejä.", "Kiipeily", "Seinä", ["Oskari", "Köysi", "Valjaat", "Hallilla", "Reitti", "Korkeus", "Urheilu"]],
+        ["@OskariKiipeilee", "Käyn kiipeilyhallilla ja harjoittelen vaikeampia reittejä kiipeilyseinällä.", "Kiipeily", "Seinä", ["Oskari", "Köysi", "Valjaat", "Hallilla", "Reitti", "Korkeus", "Urheilu"]],
         ["@MineaSienestää", "Syksyn lempipuuha on sienestää metsässä ja etsiä kantarelleja.", "Metsä", "Kantarelli", ["Minea", "Sieni", "Syksy", "Kori", "Polku", "Luonto", "Retki"]],
         ["@EetuLeijonat", "Kannustan Leijonia ja katson jääkiekkoa kavereiden kanssa.", "Leijonat", "Jääkiekko", ["Eetu", "Kiekko", "Maali", "Kannustus", "Areena", "Joukkue", "Peli"]],
         ["@SaaraSuklaa", "Kokeilen uusia reseptejä ja teen usein tummaa suklaata jälkiruoaksi.", "Suklaa", "Jälkiruoka", ["Saara", "Resepti", "Kaakao", "Leivonta", "Keittiö", "Vanilja", "Herkku"]],
